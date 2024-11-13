@@ -1,0 +1,5 @@
+fastapi
+pynput
+pillow
+uvicorn
+pystray
