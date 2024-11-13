@@ -13,6 +13,7 @@ import datetime
 import os
 import sqlite3
 import sys
+import logging
 
 from pydantic import BaseModel
 from pynput import keyboard
@@ -27,7 +28,13 @@ from PIL import Image, ImageDraw
 from pynput.keyboard import Key
 from starlette.responses import HTMLResponse
 from starlette.staticfiles import StaticFiles
+from uvicorn import Config, Server
 
+# 配置日志记录
+logging.basicConfig(filename="app.log",level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+logger = logging.getLogger()
+# 在 FastAPI 应用中记录日志
+logger.info("FastAPI app is starting.")
 # 初始化数据库
 # 初始化数据库连接
 conn = sqlite3.connect("key_events.db", check_same_thread=False)
@@ -100,6 +107,7 @@ static_dir = os.path.join(sys._MEIPASS, "static") if getattr(sys, 'frozen', Fals
 # 挂载静态文件目录，用于提供 HTML 和其他静态文件
 app.mount("/static", StaticFiles(directory=static_dir), name="static")
 
+
 # 定义按键统计数据模型
 class KeyCount(BaseModel):
     key_name: str
@@ -110,7 +118,7 @@ class KeyCount(BaseModel):
 # 返回 HTML 页面
 @app.get("/", response_class=HTMLResponse)
 async def read_dashboard():
-    with open(os.path.join(static_dir,'index.html'), "r", encoding="utf-8") as file:
+    with open(os.path.join(static_dir, 'index.html'), "r", encoding="utf-8") as file:
         html_content = file.read()
     return HTMLResponse(content=html_content, status_code=200)
 
@@ -126,9 +134,25 @@ def get_key_counts():
 
 # 启动键盘监听的同时运行FastAPI服务器
 def start_api():
-    import uvicorn
-    uvicorn.run(app, host="127.0.0.1", port=21315)
-
+    # import uvicorn
+    # uvicorn.run(app, host="127.0.0.1", port=21315)
+    log_config = {
+        "version": 1,
+        "disable_existing_loggers": True,
+        "handlers": {
+            "file_handler": {
+                "class": "logging.FileHandler",
+                "filename": "app.log",
+            },
+        },
+        "root": {
+            "handlers": ["file_handler"],
+            "level": "INFO",
+        },
+    }
+    config = Config(app=app, host="127.0.0.1", port=21315, log_config=log_config)
+    server = Server(config=config)
+    server.run()
 
 # 创建托盘图标图像
 def create_image(width: int, height: int, color1, color2):
@@ -137,6 +161,7 @@ def create_image(width: int, height: int, color1, color2):
     dc.rectangle(
         [(width // 4, height // 4), (width * 3 // 4, height * 3 // 4)], fill=color2
     )
+    image = Image.open(os.path.join(static_dir, 'logo3.0.ico'))
     return image
 
 
@@ -167,5 +192,6 @@ if __name__ == "__main__":
     # 启动键盘监听器和 API 服务器
     threading.Thread(target=start_listener).start()
     threading.Thread(target=start_api).start()
+    webbrowser.open("http://127.0.0.1:21315/")
     # 设置托盘图标
     setup_tray_icon()

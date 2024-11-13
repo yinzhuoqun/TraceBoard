@@ -4,12 +4,22 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CSS - 拟态键盘</title>
+    <title>键盘按键统计</title>
     <style>
         html, body, div {
             margin: 0;
             padding: 0;
 			font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
+        }
+        .tooltip {
+            display: none;
+            position: absolute;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 5px;
+            border-radius: 4px;
+            font-size: 12px;
+            z-index: 1000;
         }
 		/* 容器 */
         .container {
@@ -272,6 +282,7 @@
                 </div>
             </div>
         </div>
+        <div id="tooltip" class="tooltip"></div>
     </div>
     <script>
 		// 获取按键选择器
@@ -360,20 +371,51 @@
             }
             return selector;
         }
+        function generateRGBColors(value, maxValue) {
+            // 定义起始颜色和结束颜色
+            const startColor = [255, 255, 255]; // 红色 (RGB)
+            const endColor = [255, 0, 0]; // 蓝色 (RGB)
+            n = 20;
+            index = value / maxValue*n;
+            // 存储结果
+            let colors = [];
+            // 计算当前段的比例 (从 0 到 1)
+            let ratio = index / n;
+            // 对每个通道进行线性插值
+            let r = Math.round(startColor[0] + ratio * (endColor[0] - startColor[0]));
+            let g = Math.round(startColor[1] + ratio * (endColor[1] - startColor[1]));
+            let b = Math.round(startColor[2] + ratio * (endColor[2] - startColor[2]));
+            return `rgb(${r}, ${g}, ${b})`;
+        }
+        const tooltip = document.getElementById('tooltip');
         // 获取按键点击次数并设置热力图
         async function fetchKeyCounts() {
             try {
                 const response = await fetch('http://localhost:21315/key_counts');
                 const keyCounts = await response.json();
-
+                // 获取最大按键点击次数
+                const maxCount = Math.max(...keyCounts.map(item => item.count));
                 keyCounts.forEach(item => {
                     const id_ = getId(item.virtual_key_code,item.key_name);
                     const keyElement = document.getElementById(id_);
-                    console.info(id_);
                     if (keyElement) {
                         const count = item.count;
-                        const intensity = Math.min(count * 5, 255); // 根据点击次数设置颜色深度
-                        keyElement.style.backgroundColor = `rgb(${255 - intensity}, ${255 - intensity}, 255)`; // 根据点击量改变键盘按键颜色
+                        keyElement.style.backgroundColor = generateRGBColors(count,maxCount); // 根据点击量改变键盘按键颜色
+                        keyElement.addEventListener('mouseover', function(event) {
+                            tooltip.textContent = `${item.count}`;
+                            tooltip.style.display = 'block';
+                            tooltip.style.left = event.pageX + 10 + 'px';  // Position tooltip next to mouse
+                            tooltip.style.top = event.pageY + 10 + 'px';
+                        });
+
+                        keyElement.addEventListener('mousemove', function(event) {
+                            tooltip.style.left = event.pageX + 10 + 'px';  // Update tooltip position
+                            tooltip.style.top = event.pageY + 10 + 'px';
+                        });
+
+                        keyElement.addEventListener('mouseout', function() {
+                            tooltip.style.display = 'none';
+                        });
                     }
                 });
             } catch (error) {
