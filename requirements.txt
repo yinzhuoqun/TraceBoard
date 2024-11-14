@@ -4,3 +4,4 @@ pynput
 pillow
 uvicorn
 pystray
+requests
