@@ -1,0 +1,161 @@
+html, body, div {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
+}
+
+.tooltip {
+    display: none;
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 5px;
+    border-radius: 4px;
+    font-size: 12px;
+    z-index: 1000;
+}
+
+/* 容器 */
+.container {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #008080;
+    flex-direction: column; /* 关键属性 */
+    gap: 20px; /* 可选：子元素间距 */
+}
+
+.rank-list {
+    position: fixed;
+    margin-top: -25%;
+    margin-right: -70%;
+}
+
+.my-top-list {
+    position: fixed;
+    margin-top: -15%;
+    margin-left: -75%;
+}
+
+.tips input{
+    width: 80px;
+}
+
+.choice-color {
+    display: flex;
+    align-items: center;
+}
+
+.choice-color input[type="color"] {
+    margin-right: 25px; /* 调整间距 */
+}
+
+/* 键盘 */
+.keyboard {
+    display: flex;
+    border-radius: 10px;
+    box-shadow: 0px 0px 20px 1px #666 inset, 0px 0px 5px 1px #fff;
+    background-color: #E4E6EA;
+    padding: 30px;
+}
+
+/* 按键 */
+.key {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    background-color: #E4E9EC;
+    box-shadow: 3px 3px 8px 2px #999, -3px -3px 8px 2px #fff;
+    color: #000000;
+    font-size: 14px;
+    cursor: pointer;
+    transition: .1s;
+}
+
+.key:hover, .active {
+    box-shadow: 0 0 3px 1px #999;
+}
+
+/* 空键 */
+.key-empty {
+    width: 40px;
+    height: 40px;
+}
+
+/* 气泡键 */
+.key-bubble {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 20px;
+    background-color: #009999;
+    color: #fff;
+    font-size: 13px;
+    position: absolute;
+    transition: all 2s ease-in-out;
+    overflow: hidden;
+    box-shadow: 0 0 10px 1px #000, 0 0 10px 1px #fff inset;
+}
+
+/* 区域一 */
+.area-1 {
+    width: 740px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-content: baseline;
+}
+
+/* 区域二 */
+.area-2 {
+    width: 140px;
+    margin-left: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.area-2-item {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+/* 区域三 */
+.area-3 {
+    width: 190px;
+    margin-left: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.area-3-light {
+    display: flex;
+    gap: 10px;
+}
+
+.area-3-light-item {
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    color: #999;
+}
+
+.area-3-number {
+    display: flex;
+    gap: 10px;
+}
+
+.area-3-number-item {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}

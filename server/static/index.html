@@ -4,428 +4,182 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>键盘按键统计</title>
-    <style>
-        html, body, div {
-            margin: 0;
-            padding: 0;
-			font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
-        }
-        .tooltip {
-            display: none;
-            position: absolute;
-            background-color: rgba(0, 0, 0, 0.7);
-            color: white;
-            padding: 5px;
-            border-radius: 4px;
-            font-size: 12px;
-            z-index: 1000;
-        }
-		/* 容器 */
-        .container {
-            width: 100vw;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #000033;
-        }
-
-		/* 键盘 */
-        .keyboard {
-            display: flex;
-            border-radius: 10px;
-            box-shadow: 0px 0px 20px 1px #666 inset, 0px 0px 5px 1px #fff;
-            background-color: #E4E6EA;
-            padding: 30px;
-        }
-
-		/* 按键 */
-        .key {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            width: 40px;
-            height: 40px;
-            border-radius: 8px;
-            background-color: #E4E9EC;
-            box-shadow: 3px 3px 8px 2px #999, -3px -3px 8px 2px #fff;
-            color: #666;
-            font-size: 13px;
-            cursor: pointer;
-			transition: .1s;
-        }
-        .key:hover, .active {
-            box-shadow: 0 0 3px 1px #999;
-        }
-
-        /* 空键 */
-        .key-empty {
-            width: 40px;
-            height: 40px;
-        }
-
-        /* 气泡键 */
-        .key-bubble {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-radius: 20px;
-            background-color: #009999;
-            color: #fff;
-            font-size: 13px;
-            position: absolute;
-            transition: all 2s ease-in-out;
-            overflow: hidden;
-            box-shadow: 0 0 10px 1px #000, 0 0 10px 1px #fff inset;
-        }
-
-		/* 区域一 */
-        .area-1 {
-            width: 740px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            align-content: baseline;
-        }
-
-		/* 区域二 */
-        .area-2 {
-            width: 140px;
-            margin-left: 20px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-        .area-2-item {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-		/* 区域三 */
-        .area-3 {
-            width: 190px;
-            margin-left: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .area-3-light {
-            display: flex;
-            gap: 10px;
-        }
-        .area-3-light-item {
-            width: 40px;
-            height: 40px;
-            line-height: 40px;
-            text-align: center;
-            color: #999;
-        }
-        .area-3-number {
-            display: flex;
-            gap: 10px;
-        }
-        .area-3-number-item {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-    </style>
+    <link rel="icon" type="image/png" href="/static/logo3.0.ico">
+    <title>今天，你牛马了吗 😉</title>
+    <link rel="stylesheet" href="/static/index.css">
+    <script src="/static/base.js"></script>
 </head>
 <body>
-    <div class="container">
-        <div class="keyboard">
-			<!-- 区域一 -->
-            <div class="area-1">
-                <!-- line1 -->
-                <!-- <div class="key" id="k27" style="background-color: orange; color: #f5f5f5;">Esc</div> -->
-                <div class="key" id="k27">Esc</div>
-                <div class="key" id="k112" style="margin-left: 50px;">F1</div>
-                <div class="key" id="k113">F2</div>
-                <div class="key" id="k114">F3</div>
-                <div class="key" id="k115" style="margin-right: 25px;">F4</div>
-                <div class="key" id="k116">F5</div>
-                <div class="key" id="k117">F6</div>
-                <div class="key" id="k118">F7</div>
-                <div class="key" id="k119" style="margin-right: 25px;">F8</div>
-                <div class="key" id="k120">F9</div>
-                <div class="key" id="k121">F10</div>
-                <div class="key" id="k122">F11</div>
-                <div class="key" id="k123">F12</div>
-                <!-- line2 -->
-                <div class="key" id="k192"><span>~</span><span>`</span></div>
-                <div class="key" id="k49"><span>!</span><span>1</span></div>
-                <div class="key" id="k50"><span>@</span><span>2</span></div>
-                <div class="key" id="k51"><span>#</span><span>3</span></div>
-                <div class="key" id="k52"><span>$</span><span>4</span></div>
-                <div class="key" id="k53"><span>%</span><span>5</span></div>
-                <div class="key" id="k54"><span>^</span><span>6</span></div>
-                <div class="key" id="k55"><span>&</span><span>7</span></div>
-                <div class="key" id="k56"><span>*</span><span>8</span></div>
-                <div class="key" id="k57"><span>(</span><span>9</span></div>
-                <div class="key" id="k48"><span>)</span><span>0</span></div>
-                <div class="key" id="k189"><span>-</span><span>-</span></div>
-                <div class="key" id="k187"><span>=</span><span>+</span></div>
-                <div class="key" id="k8" style="width: 90px;">←</div>
-                <!-- line3 -->
-                <div class="key" id="k9" style="width: 70px;">Tab</div>
-                <div class="key" id="k81">Q</div>
-                <div class="key" id="k87">W</div>
-                <div class="key" id="k69">E</div>
-                <div class="key" id="k82">R</div>
-                <div class="key" id="k84">T</div>
-                <div class="key" id="k89">Y</div>
-                <div class="key" id="k85">U</div>
-                <div class="key" id="k73">I</div>
-                <div class="key" id="k79">O</div>
-                <div class="key" id="k80">P</div>
-                <div class="key" id="k219"><span>[</span><span>{</span></div>
-                <div class="key" id="k221"><span>]</span><span>}</span></div>
-                <div class="key" id="k220" style="width: 60px;"><span>\</span><span>|</span></div>
-                <!-- line4 -->
-                <div class="key" id="k20" style="width: 85px;">Caps Lock</div>
-                <div class="key" id="k65">A</div>
-                <div class="key" id="k83">S</div>
-                <div class="key" id="k68">D</div>
-                <div class="key" id="k70">F</div>
-                <div class="key" id="k71">G</div>
-                <div class="key" id="k72">H</div>
-                <div class="key" id="k74">J</div>
-                <div class="key" id="k75">K</div>
-                <div class="key" id="k76">L</div>
-                <div class="key" id="k186"><span>;</span><span>:</span></div>
-                <div class="key" id="k222"><span>'</span><span>"</span></div>
-                <div class="key" id="k13" style="width: 95px;">Enter</div>
-                <!-- line5 -->
-                <div class="key" id="k16_left" style="width: 115px;">Shift</div>
-                <div class="key" id="k90">Z</div>
-                <div class="key" id="k88">X</div>
-                <div class="key" id="k67">C</div>
-                <div class="key" id="k86">V</div>
-                <div class="key" id="k66">B</div>
-                <div class="key" id="k78">N</div>
-                <div class="key" id="k77">M</div>
-                <div class="key" id="k188"><span>,</span><span><</span></div>
-                <div class="key" id="k190"><span>.</span><span>></span></div>
-                <div class="key" id="k191"><span>/</span><span>?</span></div>
-                <div class="key" id="k16_right" style="width: 115px;">Shift</div>
-                <!-- line6 -->
-                <div class="key" id="k17_left" style="width: 50px;">Ctrl</div>
-                <div class="key" id="k91" style="width: 50px;">Win</div>
-                <div class="key" id="k18_left" style="width: 50px;">Alt</div>
-                <div class="key" id="k32" style="width: 320px;"></div>
-                <div class="key" id="k18_right" style="width: 50px;">Alt</div>
-                <div class="key" id="k93" style="width: 110px;">▤</div>
-                <div class="key" id="k17_right" style="width: 50px;">Ctrl</div>
-            </div>
+<div class="container">
+    <div class="keyboard">
+        <!-- 区域一 -->
+        <div class="area-1">
+            <!-- line1 -->
+            <!-- <div class="key" id="k27" style="background-color: orange; color: #f5f5f5;">Esc</div> -->
+            <div class="key" id="k27">Esc</div>
+            <div class="key" id="k112" style="margin-left: 50px;">F1</div>
+            <div class="key" id="k113">F2</div>
+            <div class="key" id="k114">F3</div>
+            <div class="key" id="k115" style="margin-right: 25px;">F4</div>
+            <div class="key" id="k116">F5</div>
+            <div class="key" id="k117">F6</div>
+            <div class="key" id="k118">F7</div>
+            <div class="key" id="k119" style="margin-right: 25px;">F8</div>
+            <div class="key" id="k120">F9</div>
+            <div class="key" id="k121">F10</div>
+            <div class="key" id="k122">F11</div>
+            <div class="key" id="k123">F12</div>
+            <!-- line2 -->
+            <div class="key" id="k192"><span>~</span><span>`</span></div>
+            <div class="key" id="k49"><span>!</span><span>1</span></div>
+            <div class="key" id="k50"><span>@</span><span>2</span></div>
+            <div class="key" id="k51"><span>#</span><span>3</span></div>
+            <div class="key" id="k52"><span>$</span><span>4</span></div>
+            <div class="key" id="k53"><span>%</span><span>5</span></div>
+            <div class="key" id="k54"><span>^</span><span>6</span></div>
+            <div class="key" id="k55"><span>&</span><span>7</span></div>
+            <div class="key" id="k56"><span>*</span><span>8</span></div>
+            <div class="key" id="k57"><span>(</span><span>9</span></div>
+            <div class="key" id="k48"><span>)</span><span>0</span></div>
+            <div class="key" id="k189"><span>-</span><span>-</span></div>
+            <div class="key" id="k187"><span>=</span><span>+</span></div>
+            <div class="key" id="k8" style="width: 90px;">←</div>
+            <!-- line3 -->
+            <div class="key" id="k9" style="width: 70px;">Tab</div>
+            <div class="key" id="k81">Q</div>
+            <div class="key" id="k87">W</div>
+            <div class="key" id="k69">E</div>
+            <div class="key" id="k82">R</div>
+            <div class="key" id="k84">T</div>
+            <div class="key" id="k89">Y</div>
+            <div class="key" id="k85">U</div>
+            <div class="key" id="k73">I</div>
+            <div class="key" id="k79">O</div>
+            <div class="key" id="k80">P</div>
+            <div class="key" id="k219"><span>[</span><span>{</span></div>
+            <div class="key" id="k221"><span>]</span><span>}</span></div>
+            <div class="key" id="k220" style="width: 60px;"><span>\</span><span>|</span></div>
+            <!-- line4 -->
+            <div class="key" id="k20" style="width: 85px;">Caps Lock</div>
+            <div class="key" id="k65">A</div>
+            <div class="key" id="k83">S</div>
+            <div class="key" id="k68">D</div>
+            <div class="key" id="k70">F</div>
+            <div class="key" id="k71">G</div>
+            <div class="key" id="k72">H</div>
+            <div class="key" id="k74">J</div>
+            <div class="key" id="k75">K</div>
+            <div class="key" id="k76">L</div>
+            <div class="key" id="k186"><span>;</span><span>:</span></div>
+            <div class="key" id="k222"><span>'</span><span>"</span></div>
+            <div class="key" id="k13" style="width: 95px;">Enter</div>
+            <!-- line5 -->
+            <div class="key" id="k16_left" style="width: 115px;">Shift</div>
+            <div class="key" id="k90">Z</div>
+            <div class="key" id="k88">X</div>
+            <div class="key" id="k67">C</div>
+            <div class="key" id="k86">V</div>
+            <div class="key" id="k66">B</div>
+            <div class="key" id="k78">N</div>
+            <div class="key" id="k77">M</div>
+            <div class="key" id="k188"><span>,</span><span><</span></div>
+            <div class="key" id="k190"><span>.</span><span>></span></div>
+            <div class="key" id="k191"><span>/</span><span>?</span></div>
+            <div class="key" id="k16_right" style="width: 115px;">Shift</div>
+            <!-- line6 -->
+            <div class="key" id="k17_left" style="width: 50px;">Ctrl</div>
+            <div class="key" id="k91" style="width: 50px;">Win</div>
+            <div class="key" id="k18_left" style="width: 50px;">Alt</div>
+            <div class="key" id="k32" style="width: 320px;">SPACE</div>
+            <div class="key" id="k18_right" style="width: 50px;">Alt</div>
+            <div class="key" id="k93" style="width: 110px;">▤</div>
+            <div class="key" id="k17_right" style="width: 50px;">Ctrl</div>
+        </div>
 
-			<!-- 区域二 -->
-            <div class="area-2">
-				<!-- 上 -->
-                <div class="area-2-item">
-                    <div class="key" id="k44">Print</div>
-                    <div class="key" id="k145">Lock</div>
-                    <div class="key" id="k19">Pause</div>
-                    <div class="key" id="k45">Insert</div>
-                    <div class="key" id="k36">Home</div>
-                    <div class="key" id="k33">UP</div>
-                    <div class="key" id="k46">Del</div>
-                    <div class="key" id="k35">End</div>
-                    <div class="key" id="k34">Down</div>
-                </div>
-				<!-- 下 -->
-                <div class="area-2-item">
-                    <div class="key-empty"></div>
-                    <div class="key" id="k38">↑</div>
-                    <div class="key-empty"></div>
-                    <div class="key" id="k37">←</div>
-                    <div class="key" id="k40">↓</div>
-                    <div class="key" id="k39">→</div>
-                </div>
+        <!-- 区域二 -->
+        <div class="area-2">
+            <!-- 上 -->
+            <div class="area-2-item">
+                <div class="key" id="k44">Print</div>
+                <div class="key" id="k145">Lock</div>
+                <div class="key" id="k19">Pause</div>
+                <div class="key" id="k45">Insert</div>
+                <div class="key" id="k36">Home</div>
+                <div class="key" id="k33">UP</div>
+                <div class="key" id="k46">Del</div>
+                <div class="key" id="k35">End</div>
+                <div class="key" id="k34">Down</div>
             </div>
+            <!-- 下 -->
+            <div class="area-2-item">
+                <div class="key-empty"></div>
+                <div class="key" id="k38">↑</div>
+                <div class="key-empty"></div>
+                <div class="key" id="k37">←</div>
+                <div class="key" id="k40">↓</div>
+                <div class="key" id="k39">→</div>
+            </div>
+        </div>
 
-			<!-- 区域三 -->
-            <div class="area-3">
-				<!-- 指示灯 -->
-                <div class="area-3-light">
-                    <div class="area-3-light-item" style="color: orangered;">◘</div>
-                    <div class="area-3-light-item">◘</div>
-                    <div class="area-3-light-item">◘</div>
-                    <div class="area-3-light-item">◘</div>
+        <!-- 区域三 -->
+        <div class="area-3">
+            <!-- 指示灯 -->
+            <div class="area-3-light">
+                <div class="area-3-light-item" style="color: orangered;">◘</div>
+                <div class="area-3-light-item">◘</div>
+                <div class="area-3-light-item">◘</div>
+                <div class="area-3-light-item">◘</div>
+            </div>
+            <!-- 数字小键盘 -->
+            <div class="area-3-number">
+                <!-- 左 -->
+                <div class="area-3-number-item">
+                    <div class="key" id="k144">Num</div>
+                    <div class="key" id="k111">/</div>
+                    <div class="key" id="k106">*</div>
+                    <div class="key" id="k103">7</div>
+                    <div class="key" id="k104">8</div>
+                    <div class="key" id="k105">9</div>
+                    <div class="key" id="k100">4</div>
+                    <div class="key" id="k101">5</div>
+                    <div class="key" id="k102">6</div>
+                    <div class="key" id="k97">1</div>
+                    <div class="key" id="k98">2</div>
+                    <div class="key" id="k99">3</div>
+                    <div class="key" id="k96" style="width: 90px;">0</div>
+                    <div class="key" id="k110">.</div>
                 </div>
-				<!-- 数字小键盘 -->
-                <div class="area-3-number">
-					<!-- 左 -->
-                    <div class="area-3-number-item">
-                        <div class="key" id="k144">Num</div>
-                        <div class="key" id="k111">/</div>
-                        <div class="key" id="k106">*</div>
-                        <div class="key" id="k103">7</div>
-                        <div class="key" id="k104">8</div>
-                        <div class="key" id="k105">9</div>
-                        <div class="key" id="k100">4</div>
-                        <div class="key" id="k101">5</div>
-                        <div class="key" id="k102">6</div>
-                        <div class="key" id="k97">1</div>
-                        <div class="key" id="k98">2</div>
-                        <div class="key" id="k99">3</div>
-                        <div class="key" id="k96" style="width: 90px;">0</div>
-                        <div class="key" id="k110">.</div>
-                    </div>
-					<!-- 右 -->
-                    <div class="area-3-number-item">
-                        <div class="key" id="k109">-</div>
-                        <div class="key" id="k107" style="height: 90px;">+</div>
-                        <div class="key" id="k13_num" style="height: 90px;">Enter</div>
-                    </div>
+                <!-- 右 -->
+                <div class="area-3-number-item">
+                    <div class="key" id="k109">-</div>
+                    <div class="key" id="k107" style="height: 90px;">+</div>
+                    <div class="key" id="k13_num" style="height: 90px;">Enter</div>
                 </div>
             </div>
         </div>
-        <div id="tooltip" class="tooltip"></div>
     </div>
-    <script>
-		// 获取按键选择器
-        const getSelector = () => {
-            let selector = ''
-            // 区分 shift alt control 左右键
-            if ([16, 17, 18].includes(event.keyCode)) {
-                selector = `#k${event.keyCode}${event.code.endsWith('Left') ? '_left' : '_right'}`
-            } else {
-				// 区分 enter 键
-				if (event.keyCode === 13 && event.code === 'NumpadEnter') {
-					selector = `#k${event.keyCode}_num` // 数字小键盘中的 enter 键
-				} else {
-					selector = `#k${event.keyCode}`
-				}
-            }
-            return selector
-        }
 
-        // 按下
-        document.addEventListener('keydown', (event) => {
-			console.log({event})
-            const key = document.querySelector(getSelector())
-            key && key.classList.add('active')
-        })
-
-        // 松开
-        document.addEventListener('keyup', (event) => {
-            const key = document.querySelector(getSelector())
-            if (key) {
-                key.classList.remove('active')
-
-                // 坐标点
-                const position = key.getBoundingClientRect()
-                const x = position.left
-                const y = position.top
-
-                // 宽 高
-                const w = key.offsetWidth
-                const h = key.offsetHeight
-
-                // 创建元素并设置样式
-                const div = document.createElement('div')
-                div.className = 'key-bubble'
-                div.innerText =  event.key.toLocaleUpperCase()
-                div.style.cssText = `
-                    left: ${x}px;
-                    top: ${y}px;
-                    opacity: .6;
-                    width: ${w}px;
-                    height: ${h}px;
-                `
-                document.body.append(div)
-
-                // 100 毫秒后改变位置
-                setTimeout(() => {
-                    div.style.cssText = `
-                        left: ${x}px;
-                        top: ${y - 500}px;
-                        opacity: 0;
-                        width: ${w}px;
-                        height: ${h}px;
-                    `
-                    setTimeout(() => div.remove(), 2050)
-                }, 100)
-            }
-        })
-    </script>
-    <script>
-        // 获取按键选择器
-        function getId(vk,flag){
-            let selector = '';
-            selector = `k${vk}`;
-            if(vk == 160){
-                selector = `k16_left`;
-            } else if (vk==161){
-                selector = `k16_right`;
-            }else if (vk==162){
-                selector = `k17_left`;
-            }else if (vk==163){
-                selector = `k17_right`;
-            }else if (vk==164){
-                selector = `k18_left`;
-            }else if (vk==165){
-                selector = `k18_right`;
-            }
-            return selector;
-        }
-        function generateRGBColors(value, maxValue) {
-            // 定义起始颜色和结束颜色
-            const startColor = [255, 255, 255]; // 红色 (RGB)
-            const endColor = [255, 0, 0]; // 蓝色 (RGB)
-            n = 20;
-            index = value / maxValue*n;
-            // 存储结果
-            let colors = [];
-            // 计算当前段的比例 (从 0 到 1)
-            let ratio = index / n;
-            // 对每个通道进行线性插值
-            let r = Math.round(startColor[0] + ratio * (endColor[0] - startColor[0]));
-            let g = Math.round(startColor[1] + ratio * (endColor[1] - startColor[1]));
-            let b = Math.round(startColor[2] + ratio * (endColor[2] - startColor[2]));
-            return `rgb(${r}, ${g}, ${b})`;
-        }
-        const tooltip = document.getElementById('tooltip');
-        // 获取按键点击次数并设置热力图
-        async function fetchKeyCounts() {
-            try {
-                const response = await fetch('http://localhost:21315/key_counts');
-                const keyCounts = await response.json();
-                // 获取最大按键点击次数
-                const maxCount = Math.max(...keyCounts.map(item => item.count));
-                keyCounts.forEach(item => {
-                    const id_ = getId(item.virtual_key_code,item.key_name);
-                    const keyElement = document.getElementById(id_);
-                    if (keyElement) {
-                        const count = item.count;
-                        keyElement.style.backgroundColor = generateRGBColors(count,maxCount); // 根据点击量改变键盘按键颜色
-                        keyElement.addEventListener('mouseover', function(event) {
-                            tooltip.textContent = `${item.count}`;
-                            tooltip.style.display = 'block';
-                            tooltip.style.left = event.pageX + 10 + 'px';  // Position tooltip next to mouse
-                            tooltip.style.top = event.pageY + 10 + 'px';
-                        });
-
-                        keyElement.addEventListener('mousemove', function(event) {
-                            tooltip.style.left = event.pageX + 10 + 'px';  // Update tooltip position
-                            tooltip.style.top = event.pageY + 10 + 'px';
-                        });
-
-                        keyElement.addEventListener('mouseout', function() {
-                            tooltip.style.display = 'none';
-                        });
-                    }
-                });
-            } catch (error) {
-                console.error('Error fetching key counts:', error);
-            }
-        }
-
-        // 每秒钟请求一次数据更新热力图
-        setInterval(fetchKeyCounts, 1000);
-    </script>
+    <div id="tooltip" class="tooltip"></div>
+    <div class="choice-color">
+        背景颜色：<input type="color" id="backgroundColor" value="#3CB371">
+        按键颜色：<input type="color" id="colorKey" value="#FFFFFF">
+    </div>
+    <div class="tips">
+        <input type="text" placeholder="您的昵称" id="nickname">
+        您超越了 90% 的人，天选打工人（没有耕坏的田，只有累死的牛马）！
+        <input type="hidden" id="today-count">
+    </div>
+    <div class="rank-list">
+        <h4>今日牛马榜</h4>
+        <ol>
+        </ol>
+    </div>
+    <div class="my-top-list">
+        <h4>我的 TOP10</h4>
+        <ol>
+        </ol>
+    </div>
+</div>
 </body>
+<script src="/static/index.js"></script>
 </html>

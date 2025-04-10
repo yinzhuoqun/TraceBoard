@@ -2,6 +2,7 @@ fastapi
 sqlalchemy
 pynput
 pillow
+psutil
 uvicorn
 pystray
 requests

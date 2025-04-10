@@ -15,6 +15,10 @@
 
 Windows用户可以直接[点击下载](https://github.com/LC044/TraceBoard/releases)exe可执行文件，直接双击就能运行。其他系统用户可以自行编译(运行)源码。
 
+### python 环境
+
+Python3
+
 ### 安装依赖
 
 ```bash

@@ -23,6 +23,12 @@ from log import logger
 
 from server import app, static_dir
 
+from utils.get_ini_value import Config as LocalConfig
+
+config = LocalConfig("./config.ini").read_config()
+
+server_host = config.get("server_host")
+server_port = config.get("server_port")
 
 # 启动键盘监听的同时运行FastAPI服务器
 def start_api():
@@ -42,7 +48,7 @@ def start_api():
             "level": "ERROR",
         },
     }
-    config = Config(app=app, host="127.0.0.1", port=21315, log_config=log_config)
+    config = Config(app=app, host=server_host, port=server_port, log_config=log_config)
     server = Server(config=config)
     server.run()
 
@@ -70,7 +76,7 @@ def setup_tray_icon():
 
 # 打开前端 HTML 页面
 def open_dashboard(icon, item):
-    webbrowser.open("http://127.0.0.1:21315/")
+    webbrowser.open(f"http://{server_host}:{server_port}/")
 
 
 # 退出程序
@@ -84,6 +90,6 @@ if __name__ == "__main__":
     # 启动键盘监听器和 API 服务器
     threading.Thread(target=start_listener).start()
     threading.Thread(target=start_api).start()
-    webbrowser.open("http://127.0.0.1:21315/")
+    webbrowser.open(f"http://127.0.0.1:{server_port}/")
     # 设置托盘图标
     setup_tray_icon()
