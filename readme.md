@@ -4,7 +4,7 @@
 
 * 可视化键盘按键使用情况
 
-![img.png](doc/image/img.png)
+![img.png](doc/image/keyboard_v2.png)
 
 ## 待开发功能
 
@@ -34,3 +34,13 @@ python main.py
 ## 感谢
 
 [键盘UI](https://yanyunfeng.com/article/41)
+
+## 打包
+
+pip install pyinstaller
+
+`pyinstaller --onefile --noconsole --add-data "server/static;server/static" --hidden-import=win32com --hidden-import=win32api --icon=./server/static/log03.0.ico --name="TraceBoard" main.py`
+
+## 加入排行榜
+
+config.ini 文件是加入排行榜的配置，同时也要修改 server/index.js get_rank_list() 的请求榜单的接口

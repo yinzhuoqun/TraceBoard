@@ -105,7 +105,7 @@ except:
 async def read_dashboard():
     with open(os.path.join(static_dir, 'index.html'), "r", encoding="utf-8") as file:
         html_content = file.read()
-    return HTMLResponse(content=html_content, status_code=200)
+    return HTMLResponse(content=html_content, status_code=200, )
 
 
 # 定义按键统计数据模型
@@ -116,28 +116,35 @@ class KeyCount(BaseModel):
 
 
 # 获取所有按键统计数据
-@app.get("/key_counts", response_model=List[KeyCount])
+@app.get("/key_counts")
 def get_key_counts():
     # 创建一个新的数据库会话
     db = SessionLocal()
     try:
-        # key_name_query = db.query(KeyEvent.key_name, KeyEvent.virtual_key_code).distinct().all()
-        # key_name_dict = {virtual_key_code: key_name for key_name, virtual_key_code in key_name_query}
-        # print(key_name_dict)
-        # 返回格式化后的结果
-        # result_total_list = [{"key_name": key_name_dict.get(row[1], '未知'), "count": row[2], 'virtual_key_code': row[1]}
-        #                      for row in results_total]
-
         # 查询数据库获取按键统计数据
         results_total = db.query(KeyEvent.key_name, KeyEvent.virtual_key_code, func.count(KeyEvent.virtual_key_code)) \
             .group_by(KeyEvent.virtual_key_code).all()
 
         result_total_list = [{"key_name": row[0], "count": row[2], 'virtual_key_code': row[1]} for row in results_total]
         result_total_list.sort(key=lambda x: x['count'], reverse=True)
-        return result_total_list
+
+        new_serial = db.query(MacSerial).filter(MacSerial.serial == mac_serial).first()
+        nickname = new_serial.nickname if new_serial else "佚名"
+        # 额外增加的顶层字段
+        extra_data = {
+            "status": "success",
+            "message": "Data retrieved successfully",
+            "nickname": nickname,
+            "data": result_total_list  # 原列表数据保持不变
+        }
+        return extra_data
     except Exception as e:
         print(f"Error retrieving key counts: {str(e)}")
-        return []
+        return {
+            "status": "error",
+            "message": f"Error retrieving key counts: {str(e)}",
+            "data": []  # 错误时返回空列表
+        }
     finally:
         db.close()
 
@@ -176,8 +183,10 @@ def create_key_event(key_event: KeyEventCreate):
                                  json={"nickname": nickname_info.nickname, "mac_serial": mac_serial,
                                        "count": results_today})
             print(resp.json())
+
         if rank_server_join:
             try:
+                # 给排行榜发送当前账号的数据
                 send_data_to_rank_server()
             except Exception as e:
                 print(e)

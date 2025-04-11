@@ -17,10 +17,10 @@ window.addEventListener('load', () => {
         });
     }
 
-    const storedNickname = localStorage.getItem('nickname');
-    if (storedNickname) {
-        nickname.value = storedNickname;
-    }
+    // const storedNickname = localStorage.getItem('nickname');
+    // if (storedNickname) {
+    //     nickname.value = storedNickname;
+    // }
 
 });
 
@@ -44,7 +44,8 @@ nickname.addEventListener('input', (event) => {
     const selectedNickname = event.target.value;
     localStorage.setItem('nickname', selectedNickname);
     nickname.value = selectedNickname; // 改昵称
-    save_nickname(selectedNickname).then(r => {});
+    save_nickname(selectedNickname).then(r => {
+    });
 });
 
 
@@ -66,17 +67,16 @@ async function save_nickname(nickname) {
 
 async function get_rank_list() {
     // try {
-        const response = await fetch('http://192.168.128.169:5000/trace_board_data/');
-        const result = await response.json();
-        console.log(result);
-        const ol = document.querySelector('.rank-list ol')
-        ol.innerHTML = ''; // 清空现有内容
-        result.data.forEach(item => {
-            const li = document.createElement('li');
-            // console.log(item.virtual_key_code);
-            li.textContent = `${item.nickname} ⌨ ${item.count}次`;
-            ol.appendChild(li);
-        });
+    const response = await fetch('http://tb.zhuoqun.info:5000/trace_board_data/');
+    const result = await response.json();
+    const ol = document.querySelector('.rank-list ol')
+    ol.innerHTML = ''; // 清空现有内容
+    result.data.forEach(item => {
+        const li = document.createElement('li');
+        // console.log(item.virtual_key_code);
+        li.textContent = `${item.nickname} ⌨ ${item.count}次`;
+        ol.appendChild(li);
+    });
     // } catch (error) {
     //     console.error('Error saving nickname:', error);
     // }
@@ -89,7 +89,9 @@ const tooltip = document.getElementById('tooltip');
 async function fetchKeyCounts() {
     try {
         const response = await fetch('http://127.0.0.1:21315/key_counts');
-        const keyCounts = await response.json();
+        const responseData = await response.json();
+        const keyCounts = responseData.data;
+        nickname.value = responseData.nickname;
         // 获取最大按键点击次数
         const maxCount = Math.max(...keyCounts.map(item => item.count));
         keyCounts.forEach(item => {
@@ -130,6 +132,7 @@ async function fetchKeyCounts() {
         console.error('Error fetching key counts:', error);
     }
 }
+
 get_rank_list();
 fetchKeyCounts();
 // 每秒钟请求一次数据更新热力图

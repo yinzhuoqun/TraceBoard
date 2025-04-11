@@ -30,6 +30,7 @@ config = LocalConfig("./config.ini").read_config()
 server_host = config.get("server_host")
 server_port = config.get("server_port")
 
+
 # 启动键盘监听的同时运行FastAPI服务器
 def start_api():
     # import uvicorn
@@ -87,9 +88,15 @@ def exit_app(icon, item):
 
 # 主线程启动
 if __name__ == "__main__":
-    # 启动键盘监听器和 API 服务器
-    threading.Thread(target=start_listener).start()
-    threading.Thread(target=start_api).start()
-    webbrowser.open(f"http://127.0.0.1:{server_port}/")
-    # 设置托盘图标
-    setup_tray_icon()
+    import traceback
+
+    try:
+        # 启动键盘监听器和 API 服务器
+        threading.Thread(target=start_listener).start()
+        threading.Thread(target=start_api).start()
+        webbrowser.open(f"http://127.0.0.1:{server_port}/")
+        # 设置托盘图标
+        setup_tray_icon()
+    except Exception as e:
+        with open('error.log', 'w') as f:
+            f.write(traceback.format_exc())
