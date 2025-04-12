@@ -1,12 +1,22 @@
 const backgroundColor = document.getElementById('backgroundColor');
+const keyboardBackgroundColor = document.getElementById('keyboardBackgroundColor');
 const colorKey = document.getElementById('colorKey');
 const nickname = document.getElementById('nickname');
+const macSerial = document.getElementById('macSerial');
+const todayCount = document.getElementById('todayCount');
+const rankListMyPercent = document.getElementById('rankListMyPercent');
 
 window.addEventListener('load', () => {
     const storedBackgroundColor = localStorage.getItem('backgroundColor');
     if (storedBackgroundColor) {
         document.querySelector('.container').style.backgroundColor = storedBackgroundColor;
         backgroundColor.value = storedBackgroundColor;
+    }
+
+    const storedKeyboardBackgroundColor = localStorage.getItem('keyboardBackgroundColor');
+    if (storedKeyboardBackgroundColor) {
+        document.querySelector('.keyboard').style.backgroundColor = storedKeyboardBackgroundColor;
+        keyboardBackgroundColor.value = storedKeyboardBackgroundColor;
     }
 
     const storedKeyColor = localStorage.getItem('keyColor');
@@ -30,6 +40,11 @@ backgroundColor.addEventListener('input', (event) => {
     localStorage.setItem('backgroundColor', selectedColor);
 });
 
+keyboardBackgroundColor.addEventListener('input', (event) => {
+    const selectedColor = event.target.value;
+    document.querySelector('.keyboard').style.backgroundColor = selectedColor; // 改背景
+    localStorage.setItem('keyboardBackgroundColor', selectedColor);
+});
 
 colorKey.addEventListener('input', (event) => {
     const selectedColor = event.target.value;
@@ -66,20 +81,21 @@ async function save_nickname(nickname) {
 
 
 async function get_rank_list() {
-    // try {
-    const response = await fetch('http://tb.zhuoqun.info:5000/trace_board_data/');
-    const result = await response.json();
-    const ol = document.querySelector('.rank-list ol')
-    ol.innerHTML = ''; // 清空现有内容
-    result.data.forEach(item => {
-        const li = document.createElement('li');
-        // console.log(item.virtual_key_code);
-        li.textContent = `${item.nickname} ⌨ ${item.count}次`;
-        ol.appendChild(li);
-    });
-    // } catch (error) {
-    //     console.error('Error saving nickname:', error);
-    // }
+    try {
+        const response = await fetch('http://tb.zhuoqun.info:5000/trace_board_data/?macSerial=' + macSerial.value);
+        const result = await response.json();
+        const ol = document.querySelector('.rank-list ol')
+        ol.innerHTML = ''; // 清空现有内容
+        result.data.forEach(item => {
+            const li = document.createElement('li');
+            // console.log(item.virtual_key_code);
+            li.textContent = `${item.nickname} ⌨ ${item.count}次`;
+            ol.appendChild(li);
+        });
+        rankListMyPercent.innerText = `${result.myPercent}`;
+    } catch (error) {
+        console.error('Error saving nickname:', error);
+    }
 }
 
 
@@ -128,13 +144,17 @@ async function fetchKeyCounts() {
             ol.appendChild(li);
         });
 
+        document.title = responseData.todayCount + "⌨了马牛您，天今🚩";
+        macSerial.value = responseData.macSerial;
+        todayCount.value = responseData.todayCount;
+
     } catch (error) {
         console.error('Error fetching key counts:', error);
     }
 }
 
-get_rank_list();
 fetchKeyCounts();
+get_rank_list();
 // 每秒钟请求一次数据更新热力图
 setInterval(fetchKeyCounts, 1500);
 setInterval(get_rank_list, 1500);

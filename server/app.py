@@ -128,13 +128,19 @@ def get_key_counts():
         result_total_list = [{"key_name": row[0], "count": row[2], 'virtual_key_code': row[1]} for row in results_total]
         result_total_list.sort(key=lambda x: x['count'], reverse=True)
 
+        today_midnight = datetime.combine(datetime.today(), time.min)
+        results_today_count = db.query(func.count(KeyEvent.virtual_key_code)) \
+            .filter(KeyEvent.timestamp >= today_midnight).scalar()
+
         new_serial = db.query(MacSerial).filter(MacSerial.serial == mac_serial).first()
         nickname = new_serial.nickname if new_serial else "佚名"
         # 额外增加的顶层字段
         extra_data = {
-            "status": "success",
-            "message": "Data retrieved successfully",
+            "status": "200",
+            "message": "successfully",
             "nickname": nickname,
+            "macSerial": mac_serial,
+            "todayCount": results_today_count,
             "data": result_total_list  # 原列表数据保持不变
         }
         return extra_data
@@ -175,13 +181,13 @@ def create_key_event(key_event: KeyEventCreate):
         today_midnight = datetime.combine(datetime.today(), time.min)
 
         def send_data_to_rank_server():
-            results_today = db.query(func.count(KeyEvent.virtual_key_code)) \
+            results_today_count = db.query(func.count(KeyEvent.virtual_key_code)) \
                 .filter(KeyEvent.timestamp >= today_midnight).scalar()
             # print(results_today)
             nickname_info = db.query(MacSerial).filter(MacSerial.serial == mac_serial).first()
             resp = requests.post(f"http://{rank_server_url}:{rank_server_port}/trace_board_data/",
                                  json={"nickname": nickname_info.nickname, "mac_serial": mac_serial,
-                                       "count": results_today})
+                                       "count": results_today_count})
             print(resp.json())
 
         if rank_server_join:

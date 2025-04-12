@@ -161,13 +161,15 @@
 
     <div id="tooltip" class="tooltip"></div>
     <div class="choice-color">
-        背景颜色：<input type="color" id="backgroundColor" value="#3CB371">
-        按键颜色：<input type="color" id="colorKey" value="#FFFFFF">
+        换背景色：<input type="color" id="backgroundColor" value="#3CB371">
+        换键盘色：<input type="color" id="keyboardBackgroundColor" value="#000000">
+        换按键色：<input type="color" id="colorKey" value="#FFFFFF">
     </div>
     <div class="tips">
-        <input type="text" placeholder="您的昵称" id="nickname">
-        您超越了 90% 的人，天选打工人（没有耕坏的田，只有累死的牛马）！
-        <input type="hidden" id="today-count">
+        <input type="text" placeholder="您的昵称" id="nickname" title="您的昵称">
+        您超越了 <span id="rankListMyPercent">90%</span> 的人，天选打工人（没有耕坏的田，只有累死的牛马）！
+        <input type="hidden" id="todayCount">
+        <input type="hidden" id="macSerial">
     </div>
     <div class="rank-list">
         <h4>今日牛马榜</h4>
