@@ -37,9 +37,17 @@ python main.py
 
 ## 打包
 
-pip install pyinstaller
+#### 安装 pyinstaller
 
-`pyinstaller --onefile --noconsole --add-data "server/static;server/static" --hidden-import=win32com --hidden-import=win32api --icon=./server/static/log03.0.ico --name="TraceBoard" main.py`
+`pip install pyinstaller`
+
+#### 打包的文件信息
+
+`file_version_info.txt`
+
+#### 打包命令
+
+`pyinstaller --onefile --noconsole --add-data "server/static;server/static" --hidden-import=win32com --hidden-import=win32api --icon=./server/static/logo3.0.ico --name="TraceBoard" --version-file file_version_info.txt main.py`
 
 ## 加入排行榜
 
