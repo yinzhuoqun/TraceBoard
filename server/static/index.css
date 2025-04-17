@@ -25,6 +25,17 @@ html, body, div {
     background-color: #008080;
     flex-direction: column; /* 关键属性 */
     gap: 20px; /* 可选：子元素间距 */
+    transition: visibility 0.3s, opacity 0.3s;
+}
+
+.hidden {
+    visibility: hidden;
+    opacity: 0;
+}
+
+button {
+    padding: 4px 8px;
+    cursor: pointer;
 }
 
 .rank-list {
@@ -39,11 +50,11 @@ html, body, div {
     margin-left: -75%;
 }
 
-.saying{
+.saying {
     margin-top: -12%;
 }
 
-.my-info input{
+.my-info input {
     width: 80px;
 }
 

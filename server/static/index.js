@@ -6,6 +6,30 @@ const macSerial = document.getElementById('macSerial');
 const todayCount = document.getElementById('todayCount');
 const rankListMyPercent = document.getElementById('rankListMyPercent');
 const saying = document.getElementById('saying');
+const keyboardDiv = document.getElementById('keyboard');
+const keyboardBtn = document.getElementById('keyboardBtn');
+
+document.addEventListener('DOMContentLoaded', function () {
+    const keyboardBtn = document.getElementById('keyboardBtn');
+    const keyboardDiv = document.getElementById('keyboardDiv');
+
+    // 从LocalStorage读取状态
+    const isHidden = localStorage.getItem('keyboardDiv') === 'true';
+
+    // 应用初始状态
+    if (isHidden) {
+        keyboardDiv.classList.add('hidden');
+    }
+
+    // 添加点击事件监听器
+    keyboardBtn.addEventListener('click', function () {
+        // 切换显示/隐藏状态
+        keyboardDiv.classList.toggle('hidden');
+
+        // 将当前状态保存到LocalStorage
+        localStorage.setItem('keyboardDiv', keyboardDiv.classList.contains('hidden'));
+    });
+});
 
 window.addEventListener('load', () => {
     const storedBackgroundColor = localStorage.getItem('backgroundColor');
@@ -83,7 +107,7 @@ async function save_nickname(nickname) {
 
 async function get_rank_list() {
     try {
-        const response = await fetch('http://tb.zhuoqun.info:5000/trace_board_data/',{
+        const response = await fetch('http://tb.zhuoqun.info:5000/trace_board_data/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8'
@@ -93,21 +117,22 @@ async function get_rank_list() {
         const result = await response.json();
         const ol = document.querySelector('.rank-list ol')
         ol.innerHTML = ''; // 清空现有内容
-        result.data.forEach(item => {
-            const li = document.createElement('li');
-            // console.log(item.virtual_key_code);
-            li.textContent = `${item.nickname} ⌨ ${item.count}次`;
-            ol.appendChild(li);
-        });
+        if (result.data.length > 0) {
+            result.data.forEach(item => {
+                const li = document.createElement('li');
+                // console.log(item.virtual_key_code);
+                li.textContent = `${item.nickname} ⌨ ${item.count}次`;
+                ol.appendChild(li);
+            });
+        }
         if (result.myPercent !== null) {
             rankListMyPercent.innerText = `${result.myPercent}`;
         }
-
         if (result.saying !== "") {
             saying.innerText = result.saying;
         }
     } catch (error) {
-        console.error('Error saving nickname:', error);
+        console.error('Error get_rank_list:', error);
     }
 }
 
@@ -130,7 +155,7 @@ async function fetchKeyCounts() {
                 const count = item.count;
                 keyElement.style.backgroundColor = generateRGBColors(count, maxCount); // 根据点击量改变键盘按键颜色
                 keyElement.addEventListener('mouseover', function (event) {
-                    tooltip.textContent = `您一共按了 ${item.count} 次`;
+                    tooltip.textContent = `您今天按了 ${item.today_count} 次`;
                     tooltip.style.display = 'block';
                     tooltip.style.left = event.pageX + 10 + 'px';  // Position tooltip next to mouse
                     tooltip.style.top = event.pageY + 10 + 'px';
