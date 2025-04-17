@@ -23,5 +23,5 @@ class Config:
 
 
 if __name__ == '__main__':
-    config = Config().read_config()
+    config = Config().read_config('local')
     print(config)

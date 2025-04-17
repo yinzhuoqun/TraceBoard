@@ -25,18 +25,6 @@ from sqlalchemy.orm import sessionmaker
 from datetime import datetime, time
 
 from utils.generate_serial import generate_serial
-from utils.get_ini_value import Config
-
-config = Config("./config.ini").read_config()
-
-server_host = config.get("server_host")
-server_port = config.get("server_port")
-
-config_rank_server = Config("./config.ini").read_config("rank_server")
-rank_server_join = config_rank_server.get("join")
-if rank_server_join:
-    rank_server_url = config_rank_server.get("server_host")
-    rank_server_port = config_rank_server.get("server_port")
 
 # 设备编码
 mac_serial = generate_serial()
@@ -125,12 +113,20 @@ def get_key_counts():
         results_total = db.query(KeyEvent.key_name, KeyEvent.virtual_key_code, func.count(KeyEvent.virtual_key_code)) \
             .group_by(KeyEvent.virtual_key_code).all()
 
-        result_total_list = [{"key_name": row[0], "count": row[2], 'virtual_key_code': row[1]} for row in results_total]
-        result_total_list.sort(key=lambda x: x['count'], reverse=True)
-
         today_midnight = datetime.combine(datetime.today(), time.min)
-        results_today_count = db.query(func.count(KeyEvent.virtual_key_code)) \
-            .filter(KeyEvent.timestamp >= today_midnight).scalar()
+        today_count_data = db.query(KeyEvent.virtual_key_code, func.count(KeyEvent.virtual_key_code)) \
+            .filter(KeyEvent.timestamp >= today_midnight).group_by(KeyEvent.virtual_key_code).all()
+
+        today_count_data = {str(row[0]): row[1] for row in today_count_data}
+        # print(today_count_data)
+        today_count = sum(today_count_data.values())
+        # print(today_count)
+        result_total_list = [{"key_name": row[0], "count": row[2], 'virtual_key_code': row[1],
+                              "today_count": today_count_data.get(str(row[1]), 0)
+                              }
+                             for row in results_total]
+        # print(result_total_list)
+        result_total_list.sort(key=lambda x: x['today_count'], reverse=True)
 
         new_serial = db.query(MacSerial).filter(MacSerial.serial == mac_serial).first()
         nickname = new_serial.nickname if new_serial else "佚名"
@@ -140,7 +136,7 @@ def get_key_counts():
             "message": "successfully",
             "nickname": nickname,
             "macSerial": mac_serial,
-            "todayCount": results_today_count,
+            "todayCount": today_count,
             "data": result_total_list  # 原列表数据保持不变
         }
         return extra_data
@@ -149,7 +145,7 @@ def get_key_counts():
         return {
             "status": "error",
             "message": f"Error retrieving key counts: {str(e)}",
-            "data": []  # 错误时返回空列表
+            "data": {}  # 错误时返回空列表
         }
     finally:
         db.close()
@@ -177,25 +173,6 @@ def create_key_event(key_event: KeyEventCreate):
         db.add(new_event)
         db.commit()  # 提交事务
         db.refresh(new_event)  # 刷新以获取生成的 ID 等信息
-
-        today_midnight = datetime.combine(datetime.today(), time.min)
-
-        def send_data_to_rank_server():
-            results_today_count = db.query(func.count(KeyEvent.virtual_key_code)) \
-                .filter(KeyEvent.timestamp >= today_midnight).scalar()
-            # print(results_today)
-            nickname_info = db.query(MacSerial).filter(MacSerial.serial == mac_serial).first()
-            resp = requests.post(f"http://{rank_server_url}:{rank_server_port}/trace_board_data/",
-                                 json={"nickname": nickname_info.nickname, "mac_serial": mac_serial,
-                                       "count": results_today_count})
-            print(resp.json())
-
-        if rank_server_join:
-            try:
-                # 给排行榜发送当前账号的数据
-                send_data_to_rank_server()
-            except Exception as e:
-                print(e)
 
         return new_event  # 返回插入的数据
     except Exception as e:
@@ -241,5 +218,4 @@ async def save_nickname(save_nickname: MacSerialCreate):
 if __name__ == '__main__':
     import uvicorn
 
-    # uvicorn.run(app, host="127.0.0.1", port=21315)
-    uvicorn.run(app, host=server_host, port=server_host)
+    uvicorn.run(app, host="127.0.0.1", port=21315)

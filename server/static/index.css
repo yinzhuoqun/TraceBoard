@@ -30,7 +30,7 @@ html, body, div {
 .rank-list {
     position: fixed;
     margin-top: -25%;
-    margin-right: -70%;
+    margin-right: -72%;
 }
 
 .my-top-list {
@@ -39,7 +39,11 @@ html, body, div {
     margin-left: -75%;
 }
 
-.tips input{
+.saying{
+    margin-top: -12%;
+}
+
+.my-info input{
     width: 80px;
 }
 

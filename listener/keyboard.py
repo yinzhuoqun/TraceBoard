@@ -13,13 +13,6 @@ import datetime
 import requests
 from pynput.keyboard import Key, Listener as KeyboardListener
 
-from utils.get_ini_value import Config
-
-config = Config("config.ini").read_config()
-
-server_host = config.get("server_host")
-server_port = config.get("server_port")
-
 # 全局变量
 pressed_keys = set()
 
@@ -27,7 +20,7 @@ pressed_keys = set()
 # 插入按键信息到数据库
 def insert_key_event(key_name: str, virtual_key_code: int):
     timestamp = datetime.datetime.now()
-    url = f"http://127.0.0.1:{server_port}/key_events"
+    url = f"http://127.0.0.1:21315/key_events"
     data = {
         "key_name": key_name,
         "virtual_key_code": virtual_key_code

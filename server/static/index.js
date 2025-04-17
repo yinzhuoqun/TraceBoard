@@ -5,6 +5,7 @@ const nickname = document.getElementById('nickname');
 const macSerial = document.getElementById('macSerial');
 const todayCount = document.getElementById('todayCount');
 const rankListMyPercent = document.getElementById('rankListMyPercent');
+const saying = document.getElementById('saying');
 
 window.addEventListener('load', () => {
     const storedBackgroundColor = localStorage.getItem('backgroundColor');
@@ -82,7 +83,13 @@ async function save_nickname(nickname) {
 
 async function get_rank_list() {
     try {
-        const response = await fetch('http://tb.zhuoqun.info:5000/trace_board_data/?macSerial=' + macSerial.value);
+        const response = await fetch('http://tb.zhuoqun.info:5000/trace_board_data/',{
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+            body: JSON.stringify({macSerial: macSerial.value, todayCount: todayCount.value, nickname: nickname.value})
+        });
         const result = await response.json();
         const ol = document.querySelector('.rank-list ol')
         ol.innerHTML = ''; // 清空现有内容
@@ -92,7 +99,13 @@ async function get_rank_list() {
             li.textContent = `${item.nickname} ⌨ ${item.count}次`;
             ol.appendChild(li);
         });
-        rankListMyPercent.innerText = `${result.myPercent}`;
+        if (result.myPercent !== null) {
+            rankListMyPercent.innerText = `${result.myPercent}`;
+        }
+
+        if (result.saying !== "") {
+            saying.innerText = result.saying;
+        }
     } catch (error) {
         console.error('Error saving nickname:', error);
     }
@@ -140,14 +153,13 @@ async function fetchKeyCounts() {
         top10Items.forEach(item => {
             const li = document.createElement('li');
             // console.log(item.virtual_key_code);
-            li.textContent = `${item.key_name} ⌨ ${item.count}次`;
+            li.textContent = `${item.key_name} ⌨ ${item.today_count}次`;
             ol.appendChild(li);
         });
 
-        document.title = responseData.todayCount + "⌨了马牛您，天今🚩";
+        document.title = responseData.todayCount + "次⌨了马牛您，天今🚩";
         macSerial.value = responseData.macSerial;
         todayCount.value = responseData.todayCount;
-
     } catch (error) {
         console.error('Error fetching key counts:', error);
     }

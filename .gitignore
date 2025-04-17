@@ -6,6 +6,6 @@ dist
 *.log
 *.spec
 *.db
-*.pyc
-__pycahe__/
+__pycache__/
+*.py[cod]
 
