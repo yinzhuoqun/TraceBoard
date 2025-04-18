@@ -94,7 +94,7 @@ async function save_nickname(nickname) {
 
 async function getRankList() {
     try {
-        // // 加入排行榜的接口
+        // 加入排行榜的接口
         const joinRankUrl = 'http://zhuoqun.zone:5000/trace_board_data/';
         const response = await fetch(joinRankUrl, {
             method: 'POST',
