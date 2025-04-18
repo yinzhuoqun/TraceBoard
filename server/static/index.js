@@ -12,21 +12,14 @@ const keyboardBtn = document.getElementById('keyboardBtn');
 document.addEventListener('DOMContentLoaded', function () {
     const keyboardBtn = document.getElementById('keyboardBtn');
     const keyboardDiv = document.getElementById('keyboardDiv');
-
-    // 从LocalStorage读取状态
     const isHidden = localStorage.getItem('keyboardDiv') === 'true';
 
-    // 应用初始状态
     if (isHidden) {
         keyboardDiv.classList.add('hidden');
     }
 
-    // 添加点击事件监听器
     keyboardBtn.addEventListener('click', function () {
-        // 切换显示/隐藏状态
         keyboardDiv.classList.toggle('hidden');
-
-        // 将当前状态保存到LocalStorage
         localStorage.setItem('keyboardDiv', keyboardDiv.classList.contains('hidden'));
     });
 });
@@ -51,11 +44,6 @@ window.addEventListener('load', () => {
             key.style.backgroundColor = storedKeyColor;
         });
     }
-
-    // const storedNickname = localStorage.getItem('nickname');
-    // if (storedNickname) {
-    //     nickname.value = storedNickname;
-    // }
 
 });
 
@@ -104,10 +92,11 @@ async function save_nickname(nickname) {
     }
 }
 
-
-async function get_rank_list() {
+async function getRankList() {
     try {
-        const response = await fetch('http://tb.zhuoqun.info:5000/trace_board_data/', {
+        // // 加入排行榜的接口
+        const joinRankUrl = 'http://tb.zhuoqun.info:5000/trace_board_data/';
+        const response = await fetch(joinRankUrl, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8'
@@ -191,7 +180,7 @@ async function fetchKeyCounts() {
 }
 
 fetchKeyCounts();
-get_rank_list();
+getRankList();
 // 每秒钟请求一次数据更新热力图
 setInterval(fetchKeyCounts, 1500);
-setInterval(get_rank_list, 1500);
+setInterval(getRankList, 1500);

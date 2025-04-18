@@ -4,7 +4,7 @@
 
 * 可视化键盘按键使用情况
 
-![img.png](doc/image/keyboard_v2.png)
+![img.png](doc/image/tracboard_use.gif)
 
 ## 待开发功能
 
@@ -50,5 +50,5 @@ python main.py
 `pyinstaller --onefile --noconsole --add-data "server/static;server/static" --hidden-import=win32com --hidden-import=win32api --icon=./server/static/logo3.0.ico --name="TraceBoard" --version-file file_version_info.txt main.py`
 
 ## 加入排行榜
-
-config.ini 文件是加入排行榜的配置，同时也要修改 server/index.js get_rank_list() 的请求榜单的接口
+数据都是存在本地 key_events.db 文件中，当天使用的总数通过接口长传共享加入排行榜，
+加入排行榜要修改 server/index.js get_rank_list() 的请求榜单的接口
