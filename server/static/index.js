@@ -95,7 +95,7 @@ async function save_nickname(nickname) {
 async function getRankList() {
     try {
         // // 加入排行榜的接口
-        const joinRankUrl = 'http://tb.zhuoqun.info:5000/trace_board_data/';
+        const joinRankUrl = 'http://zhuoqun.zone:5000/trace_board_data/';
         const response = await fetch(joinRankUrl, {
             method: 'POST',
             headers: {
@@ -110,7 +110,7 @@ async function getRankList() {
             result.data.forEach(item => {
                 const li = document.createElement('li');
                 // console.log(item.virtual_key_code);
-                li.textContent = `${item.nickname} ⌨ ${item.count}次`;
+                li.textContent = `${item.nickname} ⌨ ${item.todayCount}次`;
                 ol.appendChild(li);
             });
         }

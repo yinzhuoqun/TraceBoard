@@ -50,5 +50,8 @@ python main.py
 `pyinstaller --onefile --noconsole --add-data "server/static;server/static" --hidden-import=win32com --hidden-import=win32api --icon=./server/static/logo3.0.ico --name="TraceBoard" --version-file file_version_info.txt main.py`
 
 ## 加入排行榜
-数据都是存在本地 key_events.db 文件中，当天使用的总数通过接口长传共享加入排行榜，
-加入排行榜要修改 server/index.js get_rank_list() 的请求榜单的接口
+数据都是存在本地 key_events.db 文件中，当天使用的总数通过接口上传共享加入排行榜
+
+server/static/index.js 的 get_rank_list() 的 joinRankUrl 是请求榜单的接口
+
+默认是：http://zhuoqun.zone:5000/trace_board_data/
