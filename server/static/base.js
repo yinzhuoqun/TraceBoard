@@ -39,7 +39,7 @@ document.addEventListener('keyup', (event) => {
         // 创建元素并设置样式
         const div = document.createElement('div')
         div.className = 'key-bubble'
-        div.innerText = event.key.toLocaleUpperCase()
+        div.innerText = event.key === ' ' ? 'SPACE' : event.key.toLocaleUpperCase();
         div.style.cssText = `
                     left: ${x}px;
                     top: ${y}px;
