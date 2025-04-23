@@ -84,19 +84,3 @@ function getId(vk, flag) {
     return selector;
 }
 
-function generateRGBColors(value, maxValue) {
-    // 定义起始颜色和结束颜色
-    const startColor = [255, 255, 255]; // 红色 (RGB)
-    const endColor = [255, 0, 0]; // 蓝色 (RGB)
-    n = 20;
-    index = value / maxValue * n;
-    // 存储结果
-    let colors = [];
-    // 计算当前段的比例 (从 0 到 1)
-    let ratio = index / n;
-    // 对每个通道进行线性插值
-    let r = Math.round(startColor[0] + ratio * (endColor[0] - startColor[0]));
-    let g = Math.round(startColor[1] + ratio * (endColor[1] - startColor[1]));
-    let b = Math.round(startColor[2] + ratio * (endColor[2] - startColor[2]));
-    return `rgb(${r}, ${g}, ${b})`;
-}
